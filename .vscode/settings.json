@@ -4,6 +4,7 @@
         "*.embeddedhtml": "html",
         "riscv.h": "c",
         "defs.h": "c",
-        "string": "c"
+        "string": "c",
+        "stat.h": "c"
     }
 }

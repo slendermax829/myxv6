@@ -2,6 +2,23 @@
 # include "kernel/stat.h"
 # include "user/user.h"
 
+
+
+/* int main(){
+
+    int ticks = uptime();
+
+    if(ticks < 0){
+        
+        fprintf(2, "uptime: error getting uptime\n");
+        exit(1);
+    }
+
+    printf("up %d clock ticks\n", ticks);
+
+    exit(0);
+} */
+
 void uptime_decimal(int n){
     printf("up %d clock ticks\n", n);
 }
@@ -50,5 +67,4 @@ int main(int argc, char *argv[]){
     }
     
     exit(0);
-
 }
