@@ -20,3 +20,5 @@
 #define SYS_link   19
 #define SYS_mkdir  20
 #define SYS_close  21
+#define SYS_cputime 22 // Added system call number for cputime
+#define SYS_wait2  23 // Added system call number for wait2

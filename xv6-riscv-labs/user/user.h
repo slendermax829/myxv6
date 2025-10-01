@@ -1,5 +1,6 @@
 struct stat;
 struct rtcdate;
+struct rusage; // Definition for struct rusage
 
 // system calls
 int fork(void);
@@ -23,6 +24,7 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+int wait2(uint64, struct rusage*); // New wait2 syscall
 
 // ulib.c
 int stat(const char*, struct stat*);

@@ -5,6 +5,7 @@
         "riscv.h": "c",
         "defs.h": "c",
         "string": "c",
-        "stat.h": "c"
+        "stat.h": "c",
+        "pstat.h": "c"
     }
 }

@@ -5,6 +5,7 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "defs.h"
+#include "pstat.h"
 
 struct cpu cpus[NCPU];
 
@@ -140,6 +141,8 @@ found:
   memset(&p->context, 0, sizeof(p->context));
   p->context.ra = (uint64)forkret;
   p->context.sp = p->kstack + PGSIZE;
+
+  p->cputime = 0; // Initialize cputime to 0
 
   return p;
 }
@@ -652,5 +655,63 @@ procdump(void)
       state = "???";
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
+  }
+}
+
+int wait2(uint64 addr, struct rusage *rusage)
+{
+  struct proc *np;
+  int havekids, pid;
+  struct proc *p = myproc();
+  
+  struct rusage ru;
+
+  acquire(&wait_lock);
+
+  for(;;){
+    // Scan through table looking for exited children.
+    havekids = 0;
+    for(np = proc; np < &proc[NPROC]; np++){
+      if(np->parent == p){
+        // make sure the child isn't still in exit() or swtch().
+        acquire(&np->lock);
+
+        havekids = 1;
+        if(np->state == ZOMBIE){
+          // Found one.
+          pid = np->pid;
+          if(addr != 0 && copyout(p->pagetable, addr, (char *)&np->xstate,
+                                  sizeof(np->xstate)) < 0) {
+            release(&np->lock);
+            release(&wait_lock);
+            return -1;
+          }
+          // Capture cputime from the child process
+          ru.cputime = np->cputime;
+          
+          if(rusage != 0 && copyout(p->pagetable, (uint64)rusage,(char *)&ru,
+                                      sizeof(ru)) < 0) {
+            release(&np->lock);
+            release(&wait_lock);
+            return -1;
+          }
+
+          freeproc(np);
+          release(&np->lock);
+          release(&wait_lock);
+          return pid;
+        }
+        release(&np->lock);
+      }
+    }
+
+    // No point waiting if we don't have any children.
+    if(!havekids || p->killed){
+      release(&wait_lock);
+      return -1;
+    }
+    
+    // Wait for a child to exit.
+    sleep(p, &wait_lock);  //DOC: wait-sleep
   }
 }

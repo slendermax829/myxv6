@@ -102,13 +102,16 @@ extern uint64 sys_sbrk(void);
 extern uint64 sys_sleep(void);
 extern uint64 sys_unlink(void);
 extern uint64 sys_wait(void);
+extern uint64 sys_wait2(void); // Declaration for the new wait2 syscall
 extern uint64 sys_write(void);
 extern uint64 sys_uptime(void);
+extern uint64 sys_cputime(void); // Declaration for the new cputime syscall
 
 static uint64 (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
 [SYS_exit]    sys_exit,
 [SYS_wait]    sys_wait,
+[SYS_wait2]   sys_wait2, // Added the new wait2 syscall here
 [SYS_pipe]    sys_pipe,
 [SYS_read]    sys_read,
 [SYS_kill]    sys_kill,
@@ -127,6 +130,7 @@ static uint64 (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
+[SYS_cputime] sys_cputime, // Added the new cputime syscall here
 };
 
 void

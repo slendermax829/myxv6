@@ -93,3 +93,25 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+uint64
+sys_cputime(void)
+{
+  struct proc *p = myproc();
+  return p->cputime;
+}
+
+uint64
+sys_wait2(void)
+{
+  uint64 addr;
+  uint64 rusage_addr;
+
+  if(argaddr(0, &addr) < 0) // Get the first argument (addr)
+    return -1;
+    
+  if(argaddr(1, &rusage_addr) < 0) // Get the second argument (rusage_addr)
+    return -1;
+
+  return wait2(addr, (struct rusage *)rusage_addr); // Call wait2 with the provided arguments converts rusage_addr to a pointer to struct rusage
+}

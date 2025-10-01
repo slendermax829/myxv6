@@ -2,8 +2,6 @@
 # include "kernel/stat.h"
 # include "user/user.h"
 
-
-
 int main(int argc, char *argv[]){
 
     
@@ -22,6 +20,7 @@ int main(int argc, char *argv[]){
     }
 
     if(childPID == 0){
+
         exec(argv[1], &argv[1]);
 
         fprintf(2, "time1: exec %s failed\n", argv[1]);
@@ -31,7 +30,9 @@ int main(int argc, char *argv[]){
     } else {
         
        wait(0);
+
        int parentTime = uptime();
+       
        printf("Time elapsed: %d ticks\n", parentTime - startTime);
 
     }
