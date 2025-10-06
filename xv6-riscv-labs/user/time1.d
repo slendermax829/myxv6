@@ -1,1 +1,2 @@
-user/time1.o: user/time1.c kernel/types.h kernel/stat.h user/user.h
+user/time1.o: user/time1.c kernel/types.h kernel/stat.h user/user.h \
+ kernel/pstat.h kernel/types.h

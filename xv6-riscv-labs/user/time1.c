@@ -1,54 +1,47 @@
 # include "kernel/types.h"
 # include "kernel/stat.h"
 # include "user/user.h"
-
-/** time1: measure the time a command(program) takes to run 
- * @argc: number of command-line arguments
- * @argv: array of command-line arguments
-*/
-
+# include "kernel/pstat.h" // Include the definition for struct rusage
+/**
+ * time1: A program that measures the time taken by a command to execute,
+ *       the CPU time used by the command, and the percentage of CPU usage.
+ *      @argc: number of command-line arguments
+ *     @argv: array of command-line arguments
+ */
 int main(int argc, char *argv[]){
 
-    // Check if at least one argument is provided
-    if(argc == 1){
+    if(argc == 1){ // Check if at least one argument is provided
         printf("Usage: time1 [args]\n");
         exit(1);
     }
-    // Get the intial start time in ticks
-    int startTime = uptime();
-    // Create a child process
-    int childPID = fork();
 
-    // Error handling for fork failure
+    int startTime = uptime(); 
+    int childPID = fork(); 
+
     if(childPID < 0){
-        fprintf(2, "time1: fork failed\n");
+        fprintf(2, "time1: fork failed\n"); 
         exit(1);
     }
-
-    // Child process; execute the command
-    else
-    if(childPID == 0){
-        // Execute the command that was passed as an argument
+    else if(childPID == 0){ 
         exec(argv[1], &argv[1]);
 
-        // If exec fails, print an error message and exit
         fprintf(2, "time1: exec %s failed\n", argv[1]);
         exit(1);
-       
+    } 
+    else { // Parent process; wait for the child to finish
+        
+       struct rusage ru; // Struct to hold resource usage info
 
-    } else {
-       // Parent process; wait for the child to finish
-       // Using wait to wait for the child process to finish
-       wait(0);
-       
-       // Get the parent process end time in ticks
-       int parentTime = uptime();
+       wait2(0, &ru); // Using wait2 to wait for the child process to finish and get rusage info
 
-       // Print the time elapsed by calculating the difference
+       int parentTime = uptime(); // Get the end time in ticks
+       int cputime = ru.cputime; // Get CPU time from rusage struct
+       int percentCPU = (cputime * 100) / (parentTime - startTime); // Calculate CPU usage percentage
+       
        printf("Time elapsed: %d ticks\n", parentTime - startTime);
-
+       printf("CPU time: %d ticks\n", cputime);
+       printf("%d%% CPU\n", percentCPU);
     }
 
-    exit(0); // success
-
+    exit(0); 
 }
