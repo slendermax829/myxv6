@@ -5250,6 +5250,9 @@ procdump(void)
 
 0000000080002652 <wait2>:
 
+/**
+ * wait2: An enhanced wait function that also retrieves resource usage information. 
+ */
 int wait2(uint64 addr, struct rusage *rusage)
 {
     80002652:	711d                	addi	sp,sp,-96
@@ -5758,7 +5761,7 @@ clockintr()
     80002a12:	00003797          	auipc	a5,0x3
     80002a16:	46e78793          	addi	a5,a5,1134 # 80005e80 <kernelvec>
     80002a1a:	10579073          	csrw	stvec,a5
-  struct proc *p = myproc();
+  struct proc *p = myproc(); // get current process
     80002a1e:	fffff097          	auipc	ra,0xfffff
     80002a22:	068080e7          	jalr	104(ra) # 80001a86 <myproc>
     80002a26:	84aa                	mv	s1,a0

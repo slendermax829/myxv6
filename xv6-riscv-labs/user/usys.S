@@ -105,11 +105,6 @@ uptime:
  li a7, SYS_uptime
  ecall
  ret
-.global cputime
-cputime:
- li a7, SYS_cputime
- ecall
- ret
 .global wait2
 wait2:
  li a7, SYS_wait2

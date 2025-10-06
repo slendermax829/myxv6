@@ -36,5 +36,4 @@ entry("getpid");
 entry("sbrk");
 entry("sleep");
 entry("uptime");
-entry("cputime"); # Added the new cputime syscall here
-entry("wait2");
+entry("wait2"); # Added the new wait2 syscall here

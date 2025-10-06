@@ -658,6 +658,9 @@ procdump(void)
   }
 }
 
+/**
+ * wait2: An enhanced wait function that also retrieves resource usage information. 
+ */
 int wait2(uint64 addr, struct rusage *rusage)
 {
   struct proc *np;

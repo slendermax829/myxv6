@@ -15,27 +15,27 @@ int main(int argc, char *argv[]){
         exit(1);
     }
 
-    int startTime = uptime(); // Get the start time in ticks
-    int childPID = fork(); // Create a child process
+    int startTime = uptime(); 
+    int childPID = fork(); 
 
-    if(childPID < 0){ // Error handling for fork failure
+    if(childPID < 0){
         fprintf(2, "time2: fork failed\n"); 
         exit(1);
     }
-    else if(childPID == 0){ // Child process; execute the command
+    else if(childPID == 0){ 
         exec(argv[1], &argv[1]);
 
-        fprintf(2, "time1: exec %s failed\n", argv[1]);
+        fprintf(2, "time2: exec %s failed\n", argv[1]);
         exit(1);
     } 
     else { // Parent process; wait for the child to finish
         
-       struct rusage rusage; // Struct to hold resource usage info
+       struct rusage ru; // Struct to hold resource usage info
 
-       wait2(0, &rusage); // Using wait2 to wait for the child process to finish and get rusage info
+       wait2(0, &ru); // Using wait2 to wait for the child process to finish and get rusage info
 
        int parentTime = uptime(); // Get the end time in ticks
-       int cputime = rusage.cputime; // Get CPU time from rusage struct
+       int cputime = ru.cputime; // Get CPU time from rusage struct
        int percentCPU = (cputime * 100) / (parentTime - startTime); // Calculate CPU usage percentage
        
        printf("Time elapsed: %d ticks\n", parentTime - startTime);

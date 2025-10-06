@@ -24,7 +24,7 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
-int wait2(uint64, struct rusage*); // New wait2 syscall
+int wait2(uint64, struct rusage*); // New wait2 syscall *this is just the function call that is called from the userspace of a program
 
 // ulib.c
 int stat(const char*, struct stat*);

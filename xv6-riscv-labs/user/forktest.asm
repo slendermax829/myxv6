@@ -47,7 +47,7 @@ forktest(void)
 
   print("fork test\n");
   38:	00000517          	auipc	a0,0x0
-  3c:	42050513          	addi	a0,a0,1056 # 458 <wait2+0xe>
+  3c:	41850513          	addi	a0,a0,1048 # 450 <wait2+0xe>
   40:	00000097          	auipc	ra,0x0
   44:	fc0080e7          	jalr	-64(ra) # 0 <print>
 
@@ -71,7 +71,7 @@ forktest(void)
   if(n == N){
     print("fork claimed to work N times!\n");
   62:	00000517          	auipc	a0,0x0
-  66:	44650513          	addi	a0,a0,1094 # 4a8 <wait2+0x5e>
+  66:	43e50513          	addi	a0,a0,1086 # 4a0 <wait2+0x5e>
   6a:	00000097          	auipc	ra,0x0
   6e:	f96080e7          	jalr	-106(ra) # 0 <print>
     exit(1);
@@ -87,7 +87,7 @@ forktest(void)
     if(wait(0) < 0){
       print("wait stopped early\n");
   84:	00000517          	auipc	a0,0x0
-  88:	3e450513          	addi	a0,a0,996 # 468 <wait2+0x1e>
+  88:	3dc50513          	addi	a0,a0,988 # 460 <wait2+0x1e>
   8c:	00000097          	auipc	ra,0x0
   90:	f74080e7          	jalr	-140(ra) # 0 <print>
       exit(1);
@@ -100,7 +100,7 @@ forktest(void)
   if(wait(0) != -1){
     print("wait got too many\n");
   9e:	00000517          	auipc	a0,0x0
-  a2:	3e250513          	addi	a0,a0,994 # 480 <wait2+0x36>
+  a2:	3da50513          	addi	a0,a0,986 # 478 <wait2+0x36>
   a6:	00000097          	auipc	ra,0x0
   aa:	f5a080e7          	jalr	-166(ra) # 0 <print>
     exit(1);
@@ -127,7 +127,7 @@ forktest(void)
 
   print("fork test OK\n");
   de:	00000517          	auipc	a0,0x0
-  e2:	3ba50513          	addi	a0,a0,954 # 498 <wait2+0x4e>
+  e2:	3b250513          	addi	a0,a0,946 # 490 <wait2+0x4e>
   e6:	00000097          	auipc	ra,0x0
   ea:	f1a080e7          	jalr	-230(ra) # 0 <print>
 }
@@ -799,22 +799,12 @@ uptime:
  ret
  440:	8082                	ret
 
-0000000000000442 <cputime>:
-.global cputime
-cputime:
- li a7, SYS_cputime
- 442:	48d9                	li	a7,22
+0000000000000442 <wait2>:
+.global wait2
+wait2:
+ li a7, SYS_wait2
+ 442:	48dd                	li	a7,23
  ecall
  444:	00000073          	ecall
  ret
  448:	8082                	ret
-
-000000000000044a <wait2>:
-.global wait2
-wait2:
- li a7, SYS_wait2
- 44a:	48dd                	li	a7,23
- ecall
- 44c:	00000073          	ecall
- ret
- 450:	8082                	ret
