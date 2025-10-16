@@ -142,6 +142,10 @@ found:
   p->context.ra = (uint64)forkret;
   p->context.sp = p->kstack + PGSIZE;
 
+  // initialize process priority
+  //p->priority = getpriority(); // commented out to avoid warning
+  p->priority = 0; // default priority
+
   return p;
 }
 
@@ -303,6 +307,8 @@ fork(void)
   np->cwd = idup(p->cwd);
 
   safestrcpy(np->name, p->name, sizeof(p->name));
+
+  np->priority = p->priority; // copy process priority
 
   pid = np->pid;
 
@@ -674,6 +680,7 @@ procinfo(uint64 addr)
     procinfo.pid = p->pid;
     procinfo.state = p->state;
     procinfo.size = p->sz;
+    procinfo.priority = p->priority;
     if (p->parent)
       procinfo.ppid = (p->parent)->pid;
     else
