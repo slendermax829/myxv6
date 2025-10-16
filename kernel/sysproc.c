@@ -116,7 +116,7 @@ sys_setpriority(void)
   if(argint(0, &this_priority) < 0)
     return -1;
 
-  if(this_priority < 0 || this_priority > 49) // assuming priority range is 0-100
+  if(this_priority < 0 || this_priority > 49) // assuming priority range is 0-49
     return -1;
 
   myproc()->priority = this_priority;

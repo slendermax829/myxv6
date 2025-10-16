@@ -37,4 +37,8 @@ int main(void)
         }
         exit(0);
     }
+
+    wait(0);
+    wait(0);
+    exit(0);
 }

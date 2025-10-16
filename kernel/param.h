@@ -12,6 +12,9 @@
 #define FSSIZE       1000  // size of file system in blocks
 #define MAXPATH      128   // maximum file path name
 
-#define SCHEDULE_POLICY 1 // 1 for priority scheduling, 0 for default xv6 scheduling
+#define PRIORITY_SCHEDULING 1  // priority scheduling
+#define ROUND_ROBIN_SCHEDULING 0 // round robin scheduling
+
+#define SCHEDULE_POLICY PRIORITY_SCHEDULING // scheduling policy 
 
 enum procstate { UNUSED, USED, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
