@@ -145,6 +145,7 @@ found:
   // initialize process priority
   //p->priority = getpriority(); // commented out to avoid warning
   p->priority = 0; // default priority
+  p->readytime = 0; // initialize readytime
 
   return p;
 }
@@ -247,6 +248,7 @@ userinit(void)
   safestrcpy(p->name, "initcode", sizeof(p->name));
   p->cwd = namei("/");
 
+  p->readytime = ticks;  // to read ticks
   p->state = RUNNABLE;
 
   release(&p->lock);
@@ -319,8 +321,13 @@ fork(void)
   release(&wait_lock);
 
   acquire(&np->lock);
+  np->readytime = ticks;  // Safe to read ticks without lock
   np->state = RUNNABLE;
   release(&np->lock);
+
+  acquire(&p->lock);
+  p->readytime = 0; // reset readytime for its parent process
+  release(&p->lock);
 
   return pid;
 }
@@ -510,7 +517,7 @@ scheduler(void)
       }
 
     }
-
+    // If no scheduling policy matches, default to ROUND_ROBIN_SCHEDULING
     else{
       for(p = proc; p < &proc[NPROC]; p++) {
         acquire(&p->lock);
@@ -567,6 +574,7 @@ yield(void)
 {
   struct proc *p = myproc();
   acquire(&p->lock);
+  p->readytime = ticks;  // Safe to read ticks without lock
   p->state = RUNNABLE;
   sched();
   release(&p->lock);
@@ -635,6 +643,7 @@ wakeup(void *chan)
     if(p != myproc()){
       acquire(&p->lock);
       if(p->state == SLEEPING && p->chan == chan) {
+        p->readytime = ticks;  // Safe to read ticks without lock
         p->state = RUNNABLE;
       }
       release(&p->lock);
@@ -656,6 +665,7 @@ kill(int pid)
       p->killed = 1;
       if(p->state == SLEEPING){
         // Wake process from sleep().
+        p->readytime = ticks;  // Safe to read ticks without lock
         p->state = RUNNABLE;
       }
       release(&p->lock);
@@ -744,6 +754,7 @@ procinfo(uint64 addr)
     procinfo.state = p->state;
     procinfo.size = p->sz;
     procinfo.priority = p->priority;
+    procinfo.readytime = p->readytime;
     if (p->parent)
       procinfo.ppid = (p->parent)->pid;
     else

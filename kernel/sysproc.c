@@ -119,7 +119,7 @@ sys_setpriority(void)
   if(this_priority < 0 || this_priority > 49) // assuming priority range is 0-49
     return -1;
 
-  myproc()->priority = this_priority;
+  myproc()->priority = this_priority; // set process priority
   return 0; // success
 
 }

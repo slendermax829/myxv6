@@ -19,12 +19,22 @@ int main(int argc, char **argv)
     if (nprocs < 0)
         exit(-1);
 
-    printf("pid\tstate\t\tsize\tppid\tpriority\tname\n");
+    printf("pid\tstate\t\tsize\tppid\tpriority\tage\tname\n");
     for (i = 0; i < nprocs; i++)
     {
         state = states[uproc[i].state];
-        printf("%d\t%s\t%l\t%d\t%d\t\t%s\n", uproc[i].pid, state,
-               uproc[i].size, uproc[i].ppid, uproc[i].priority, uproc[i].name);
+        printf("%d\t%s\t%l\t%d\t%d\t\t", uproc[i].pid, state,
+               uproc[i].size, uproc[i].ppid, uproc[i].priority);
+        
+        // Print age only for RUNNABLE processes
+        if (uproc[i].state == RUNNABLE) {
+            int age = uptime() - uproc[i].readytime; // calculate age
+            printf("%d\t", age);
+        } else {
+            printf("-\t"); // not applicable
+        }
+        
+        printf("%s\n", uproc[i].name); // print process name
     }
 
     exit(0);
