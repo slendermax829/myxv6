@@ -453,6 +453,8 @@ scheduler(void)
 {
   struct proc *p;
   struct cpu *c = mycpu();
+
+  int aging = AGING_THRESHOLD; // aging threshold
   
   c->proc = 0;
   for(;;){
@@ -462,16 +464,26 @@ scheduler(void)
     if(SCHEDULE_POLICY == PRIORITY_SCHEDULING){
 
       struct proc *highest_priority_proc = 0;
+
       int highest_priority = -1;
       
       for(p = proc; p < &proc[NPROC]; p++) {
         acquire(&p->lock);
         if(p->state == RUNNABLE) {
-          if(p->priority > highest_priority) {
+
+          int this_priority = p->priority;
+
+          if(AGING_POLICY){
+          int age = ticks - p->readytime;
+          int bonus = age / aging; // bounus calculation
+          this_priority += bonus;
+          }
+
+          if(this_priority > highest_priority) {
             if(highest_priority_proc) {
               release(&highest_priority_proc->lock);
             }
-            highest_priority = p->priority;
+            highest_priority = this_priority;
             highest_priority_proc = p;
           } else {
             release(&p->lock);

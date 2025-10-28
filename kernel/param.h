@@ -17,4 +17,7 @@
 
 #define SCHEDULE_POLICY PRIORITY_SCHEDULING // scheduling policy 
 
+#define AGING_POLICY 1 // aging policy 1 = enabled 0 = disabled
+#define AGING_THRESHOLD 20 // threshold for aging in ticks
+
 enum procstate { UNUSED, USED, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };

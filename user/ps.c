@@ -31,7 +31,7 @@ int main(int argc, char **argv)
             int age = uptime() - uproc[i].readytime; // calculate age
             printf("%d\t", age);
         } else {
-            printf("-\t"); // not applicable
+            printf("N/A\t"); // not applicable
         }
         
         printf("%s\n", uproc[i].name); // print process name
