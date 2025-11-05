@@ -27,6 +27,7 @@ int uptime(void);
 int getprocs(struct pstat*); //hw3 getprocs
 int setpriority(int); //hw3 setpriority
 int getpriority(void); //hw3 getpriority
+int freepmem(void); //hw4 freepmem
 
 // ulib.c
 int stat(const char*, struct stat*);

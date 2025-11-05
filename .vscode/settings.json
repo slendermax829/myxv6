@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.dbclient-js": "javascript",
+        "*.embeddedhtml": "html",
+        "param.h": "c",
+        "defs.h": "c",
+        "memlayout.h": "c",
+        "proc.h": "c"
+    }
+}

@@ -130,3 +130,10 @@ sys_getpriority(void)
   return myproc()->priority;
 }
 
+uint64
+sys_freepmem(void)
+{
+  int free_memory = freemem(); // call to internal kernel function to get free memory
+  return free_memory;
+}
+
