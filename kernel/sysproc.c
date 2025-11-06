@@ -42,13 +42,22 @@ uint64
 sys_sbrk(void)
 {
   int addr;
-  int n;
+  int n; // number of bytes to grow/shrink heap
+  struct proc *p = myproc();
 
   if(argint(0, &n) < 0)
     return -1;
-  addr = myproc()->sz;
-  if(growproc(n) < 0)
-    return -1;
+  
+  addr = p->sz;  // save old size to return
+  
+  if(n > 0){
+    // Growing heap - just update sz without allocating physical memory
+    p->sz += n;
+  } else if(n < 0){
+    // Shrinking heap - need to deallocate physical memory
+    p->sz = uvmdealloc(p->pagetable, p->sz, p->sz + n);
+  }
+  
   return addr;
 }
 

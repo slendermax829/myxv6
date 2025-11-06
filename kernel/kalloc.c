@@ -82,6 +82,8 @@ kalloc(void)
 }
 
 // Return the amount of free physical memory in bytes
+// by traversing the free list.
+// Used by the user-level 'freepmem' program.
 int
 freemem(void){
   uint64 free_memory = 0;
