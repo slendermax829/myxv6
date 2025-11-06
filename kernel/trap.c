@@ -65,6 +65,37 @@ usertrap(void)
     intr_on();
 
     syscall();
+
+  }else if(r_scause() == 15){
+    // Handle page faults (load page fault = 13, store/AMO page fault = 15)
+    uint64 stval = r_stval();
+
+    // Check if the faulting address is within the user's valid address space
+    // We need to check against the current process size and ensure it's a user address
+    if(stval < p->sz && stval >= 0 && stval < MAXVA){
+
+      uint64 addr = PGROUNDDOWN(stval);
+      char *mem = kalloc();
+
+      if(mem == 0){
+        printf("usertrap(): out of memory for page fault at %p pid=%d\n", stval, p->pid);
+        p->killed = 1;
+      }else{
+        // Zero the allocated page
+        memset(mem, 0, PGSIZE);
+
+        // Map the page into the process's page table
+        if(mappages(p->pagetable, addr, PGSIZE, (uint64)mem, PTE_W|PTE_R|PTE_U) != 0){
+          printf("usertrap(): mappages failed for addr %p\n", addr);
+          kfree(mem);
+          p->killed = 1;
+        }
+      }
+    }else{
+      printf("usertrap(): invalid page fault addr %p (p->sz=%p) pid=%d\n", stval, p->sz, p->pid);
+      p->killed = 1;
+    }
+
   } else if((which_dev = devintr()) != 0){
     // ok
   } else {
