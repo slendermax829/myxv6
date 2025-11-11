@@ -65,8 +65,7 @@ usertrap(void)
     intr_on();
 
     syscall();
-
-  }else if(r_scause() == 15){
+  }else if(r_scause() == 15 || r_scause() == 13){
     // Handle page faults (load page fault = 13, store/AMO page fault = 15)
     uint64 stval = r_stval();
 

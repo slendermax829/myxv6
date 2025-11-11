@@ -90,9 +90,9 @@ freemem(void){
   struct run *r;
 
   acquire(&kmem.lock);
-  r = kmem.freelist;
+  r = kmem.freelist; // start of free list, traverse it
   while(r){
-    free_memory += PGSIZE;
+    free_memory += PGSIZE; // add page size for each free page
     r = r->next;
   }
   release(&kmem.lock);
